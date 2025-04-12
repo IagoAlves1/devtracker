@@ -2,6 +2,7 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from models.user import Base 
 import os
+from core.database import create_tables
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 DATABASE_URL = f"sqlite:///{os.path.join(BASE_DIR, 'devtracker.db')}"
@@ -14,4 +15,4 @@ def create_tables():
 
 if __name__ == "__main__":
     create_tables()
-    print("Banco de dados e tabelas criados com sucesso.")
+    print("Banco de dados inicializado com sucesso!")
