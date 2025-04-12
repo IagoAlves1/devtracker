@@ -1,6 +1,6 @@
-from sqlalchemy.orm import Session
 from core.database import Sessionlocal
 from services.user_service import create_user
+from schemas.user import UserCreate
 
 db = Sessionlocal()
 
