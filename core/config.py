@@ -1,7 +1,13 @@
-from dotenv import load_dotenv
 import os
+from dotenv import load_dotenv
+from pathlib import Path
+from io import StringIO
 
-load_dotenv()
 
-DATABASE_URL= os.getenv("DATABASE_URL")
-ENV = os.getenv("ENV", "development")
+
+env_path = Path(__file__).resolve().parent.parent / '.env'
+
+load_dotenv(dotenv_path=env_path)
+
+DATABASE_URL = os.getenv("DATABASE_URL")
+
