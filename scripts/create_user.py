@@ -4,6 +4,12 @@ from schemas.user import UserCreate
 
 db = Sessionlocal()
 
-new_user = create_user(db=db, name="Iago", email="iago@teste.com", password="senha123")
+user_data = UserCreate(
+    name="Jaque",
+    email="jaque@teste.com",
+    password="senha123"
+)
+
+new_user = create_user(db=db, user=user_data)
 
 print(f"Usuário criado com sucesso: {new_user.name}")
