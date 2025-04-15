@@ -29,3 +29,11 @@ def update_user(db: Session, user_id, user_data: UserUpdate):
     db.refresh(db_user)
 
     return db_user
+
+def delete_user(db: Session, user_id: int) -> bool:
+    user = db.query(User).filter(User.id == user_id).first()
+    if user:
+        db.delete(user)
+        db.commit()
+        return True
+    return False
