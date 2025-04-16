@@ -1,9 +1,9 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
-from services.user_service import create_user, get_user, update_user, delete_user, get_all_users
+from services.user_service import create_user, get_user, update_user, delete_user, list_users
 from schemas.user import UserCreate, UserResponse, UserUpdate
 from core.database import Sessionlocal
-from typing import List
+from typing import List, Optional
 
 router = APIRouter()
 
@@ -44,6 +44,11 @@ def delete_user_endpoint(user_id: int, db: Session = Depends(get_db)):
     return {"message": "Usuário deletado com sucesso"}
 
 @router.get("/users/", response_model=List[UserResponse])
-def list_users_endpoint(db: Session = Depends(get_db)):
-    users = get_all_users(db)
-    return users
+def list_users_endpoint(
+    skip: int = 0,
+    limit: int = 10,
+    name: Optional[str] = None,
+    email: Optional[str] = None,
+    db: Session = Depends(get_db)):
+
+    return list_users(db=db, skip=skip, limit=limit, name=name, email=email)

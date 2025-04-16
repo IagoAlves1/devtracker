@@ -38,5 +38,12 @@ def delete_user(db: Session, user_id: int) -> bool:
         return True
     return False
 
-def get_all_users(db: Session):
-    return db.query(User).all()
+def list_users(db: Session, skip: int = 0, limit: int = 10, name: str = None, email: str = None):
+    query = db.query(User)
+
+    if name:
+        query = query.filter(User.name.contains(name))
+    if email:
+        query = query.filter(User.email.contains(email))
+    
+    return query.offset(skip).limit(limit).all()
