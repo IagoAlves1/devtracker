@@ -3,9 +3,12 @@ from models.user import User
 from schemas.user import UserCreate
 from utils.security import hash_password
 from schemas.user import UserUpdate
+from core.hashing import create_hash
+from typing import Optional
+from pydantic import EmailStr
 
 def create_user(db: Session, user: UserCreate):
-    hashed_pw = hash_password(user.password)
+    hashed_pw = create_hash(user.password)
     db_user = User(name=user.name, email=user.email, password=hashed_pw)
     db.add(db_user)
     db.commit()
@@ -47,3 +50,6 @@ def list_users(db: Session, skip: int = 0, limit: int = 10, name: str = None, em
         query = query.filter(User.email.contains(email))
     
     return query.offset(skip).limit(limit).all()
+
+def get_user_by_email(db: Session, user_email: EmailStr) -> Optional[User]:
+    return db.query(User).filter(User.email == user_email).first()
