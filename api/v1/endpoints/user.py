@@ -49,6 +49,6 @@ def list_users_endpoint(
     limit: int = 10,
     name: Optional[str] = None,
     email: Optional[str] = None,
-    db: Session = Depends(get_db)):
+    db: Session =  Depends(get_db)):
 
     return list_users(db=db, skip=skip, limit=limit, name=name, email=email)
