@@ -6,9 +6,9 @@ db = Sessionlocal()
 
 user_id = 1
 user_data = UserUpdate(
-    name = "Gustavo",
-    email = "gustavo@teste.com",
-    password = "novasenha123"
+    name = "",
+    email = "",
+    password = ""
 )
 
 user_atualizado = update_user(db=db, user_id=user_id, user_data=user_data)
