@@ -26,21 +26,21 @@ def create_user_endpoint(user: UserCreate, db: Session = Depends(get_db)):
 def get_user_endpoint(user_id: int, db: Session =  Depends(get_db)):
     db_user = get_user(db=db, user_id=user_id)
     if db_user is None:
-        raise HTTPException(status_code=404, detail="User not found")
+        raise HTTPException(status_code=404, detail="Usuário não enconstrado")
     return db_user
 
 @router.put("/user/{user_id}")
 def update_user_endpoint(user_id: int, user: UserUpdate, db: Session = Depends(get_db)):
     db_user = update_user(db=db, user_id=user_id, user_data=user)
     if db_user is None:
-        raise HTTPException(status_code=404, detail="User not found")
+        raise HTTPException(status_code=404, detail="Usuário não enconstrado")
     return db_user
 
 @router.delete("/user/{user_id}")
 def delete_user_endpoint(user_id: int, db: Session = Depends(get_db)):
     success = delete_user(db=db, user_id=user_id)
     if not success:
-        raise HTTPException(status_code=404, detail="User not found")
+        raise HTTPException(status_code=404, detail="Usuário não enconstrado")
     return {"message": "Usuário deletado com sucesso"}
 
 @router.get("/users/", response_model=List[UserResponse])
