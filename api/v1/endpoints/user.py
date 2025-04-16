@@ -4,6 +4,8 @@ from services.user_service import create_user, get_user, update_user, delete_use
 from schemas.user import UserCreate, UserResponse, UserUpdate
 from core.database import Sessionlocal
 from typing import List, Optional
+from dependencies.security import get_current_user
+from models.user import User
 
 router = APIRouter()
 
@@ -52,3 +54,7 @@ def list_users_endpoint(
     db: Session = Depends(get_db)):
 
     return list_users(db=db, skip=skip, limit=limit, name=name, email=email)
+
+@router.get("/protected-route/")
+def protected_route(current_user: User = Depends(get_current_user)):
+    return {"message": f"Bem-vindo, {current_user.name}!"}
