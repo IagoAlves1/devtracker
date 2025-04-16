@@ -16,6 +16,10 @@ def get_db():
 
 @router.post("/user/{user_id}", response_model=UserResponse)
 def create_user_endpoint(user: UserCreate, db: Session = Depends(get_db)):
+    if user.name == "":
+        raise HTTPException(status_code=400, detail="Nome não pode ser vazio, preencha seu nome no campo Nome e tente novamente!")
+    elif user.password == "":
+        raise HTTPException(status_code=400, detail="Senha senha não pode ser vazia, digite a senha criada no campo Senha e tente novamente!")
     return create_user(db=db, user=user)
 
 @router.get("/user/{user_id}", response_model=UserResponse)
