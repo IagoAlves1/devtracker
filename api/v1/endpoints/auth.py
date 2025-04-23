@@ -3,8 +3,10 @@ from sqlalchemy.orm import Session
 from fastapi.security import OAuth2PasswordRequestForm
 from core.database import Sessionlocal
 from services.user_service import get_user_by_email
-from core.security import create_token_access
+from core.security import create_token_access, get_current_user
 from core.hashing import verify_password
+
+from models.user import User
 
 router = APIRouter()
 
@@ -30,3 +32,7 @@ def login(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depend
     token = create_token_access(dados_token)
 
     return {"access_token": token, "token_type": "bearer"}
+
+@router.get("/protected-route")
+def protected_route(current_user: User = Depends(get_current_user)):
+    return {"message": f"Bem-vindo, {current_user.name}!"}
