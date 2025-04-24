@@ -2,6 +2,7 @@ from fastapi import FastAPI
 from api.v1.endpoints import user, auth
 
 
+
 app = FastAPI()
 
 @app.get("/")

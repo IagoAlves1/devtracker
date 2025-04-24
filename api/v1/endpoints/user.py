@@ -5,6 +5,7 @@ from schemas.user import UserCreate, UserResponse, UserUpdate
 from core.database import Sessionlocal
 from typing import List, Optional
 from models.user import User
+from core.security import get_current_user
 
 router = APIRouter()
 
@@ -38,7 +39,7 @@ def update_user_endpoint(user_id: int, user: UserUpdate, db: Session = Depends(g
     return db_user
 
 @router.delete("/user/{user_id}")
-def delete_user_endpoint(user_id: int, db: Session = Depends(get_db)):
+def delete_user_endpoint(user_id: int, db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
     success = delete_user(db=db, user_id=user_id)
     if not success:
         raise HTTPException(status_code=404, detail="Usuário não enconstrado")
