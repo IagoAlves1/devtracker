@@ -32,11 +32,22 @@ def get_user_endpoint(user_id: int, db: Session =  Depends(get_db)):
     return db_user
 
 @router.put("/user/{user_id}")
-def update_user_endpoint(user_id: int, user: UserUpdate, db: Session = Depends(get_db)):
+def update_user_endpoint(user_id: int, user: UserUpdate, db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
     db_user = update_user(db=db, user_id=user_id, user_data=user)
+    
+    if current_user.id != user_id:
+        raise HTTPException(status_code=403, detail="Você não tem permissão para atualizar este usuário.")
+
+    if user.password:
+        from core.hashing import create_hash
+        user.password = create_hash(user.password)
+
+    db_user = update_user(db=db, user_id=user_id, user_data=user)
+
     if db_user is None:
-        raise HTTPException(status_code=404, detail="Usuário não enconstrado")
-    return db_user
+        raise HTTPException(status_code=404, detail="Usuário não encontrado")
+    
+    return {"message": "Usuário atualizado com sucesso"}
 
 @router.delete("/user/{user_id}")
 def delete_user_endpoint(user_id: int, db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
@@ -44,6 +55,7 @@ def delete_user_endpoint(user_id: int, db: Session = Depends(get_db), current_us
     if not success:
         raise HTTPException(status_code=404, detail="Usuário não enconstrado")
     return {"message": "Usuário deletado com sucesso"}
+    
 
 @router.get("/users/", response_model=List[UserResponse])
 def list_users_endpoint(

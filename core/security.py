@@ -35,12 +35,13 @@ def get_current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(
 
         if email is None:
             raise HTTPException(status_code=401, detail="Token inválido")
-        
+
+        user = get_user_by_email(db, email)
+        if user is None:
+            raise HTTPException(status_code=401, detail="Usuário não encontrado")
+
+        return user
+
     except JWTError:
         raise HTTPException(status_code=401, detail="Token inválido")
     
-    user = get_user_by_email(db, email)
-    if user is None:
-        raise HTTPException(status_code=401, detail="Usuário não encontrado")
-    
-    return user
