@@ -33,8 +33,11 @@ def get_user_endpoint(user_id: int, db: Session =  Depends(get_db)):
 
 @router.put("/user/{user_id}")
 def update_user_endpoint(user_id: int, user: UserUpdate, db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
-    db_user = update_user(db=db, user_id=user_id, user_data=user)
     
+    db_user = db.query(User).filter(User.id == user_id).first()    
+    if db_user is None:
+        raise HTTPException(status_code=404, detail="Usuário não encontrado")
+
     if current_user.id != user_id:
         raise HTTPException(status_code=403, detail="Você não tem permissão para atualizar este usuário.")
 
@@ -42,10 +45,7 @@ def update_user_endpoint(user_id: int, user: UserUpdate, db: Session = Depends(g
         from core.hashing import create_hash
         user.password = create_hash(user.password)
 
-    db_user = update_user(db=db, user_id=user_id, user_data=user)
-
-    if db_user is None:
-        raise HTTPException(status_code=404, detail="Usuário não encontrado")
+    updated_user = update_user(db=db, user_id=user_id, user_data=user)
     
     return {"message": "Usuário atualizado com sucesso"}
 
