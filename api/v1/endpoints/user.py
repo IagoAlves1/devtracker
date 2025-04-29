@@ -51,10 +51,18 @@ def update_user_endpoint(user_id: int, user: UserUpdate, db: Session = Depends(g
 
 @router.delete("/user/{user_id}")
 def delete_user_endpoint(user_id: int, db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
-    success = delete_user(db=db, user_id=user_id)
-    if not success:
-        raise HTTPException(status_code=404, detail="Usuário não enconstrado")
-    return {"message": "Usuário deletado com sucesso"}
+    
+    if current_user.id != user_id:
+        raise HTTPException(status_code=403, detail="Você não tem permissão para excluir este usuário.")
+    
+    user = db.query(User).filter(User.id == user_id).first()
+   
+    if not user:
+        raise HTTPException(status_code=404, detail="Usuário não encontrado.")
+    
+    db.delete(user)
+    db.commit()
+    return {"message": "Usuário excluído com sucesso"}
     
 
 @router.get("/users/", response_model=List[UserResponse])
