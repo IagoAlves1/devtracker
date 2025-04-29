@@ -18,20 +18,24 @@ def create_user(db: Session, user: UserCreate):
 def get_user(db: Session, user_id: int):
     return db.query(User).filter(User.id == user_id).first()
 
-def update_user(db: Session, user_id, user_data: UserUpdate):
-    db_user = db.query(User).filter(User.id == user_id).first()
-
-    if db_user is None:
+def update_user(db: Session, user_id: int, user_data: UserUpdate):
+    user = db.query(User).filter(User.id == user_id).first()
+    if not user:
         return None
 
-    db_user.name = user_data.name
-    db_user.email = user_data.email
-    db_user.password = user_data.password
+    if user_data.name is not None:
+        user.name = user_data.name
+
+    if user_data.email is not None:
+        user.email = user_data.email
+
+    if user_data.password is not None:
+        from core.hashing import create_hash
+        user.password = create_hash(user_data.password)
 
     db.commit()
-    db.refresh(db_user)
-
-    return db_user
+    db.refresh(user)
+    return user
 
 def delete_user(db: Session, user_id: int) -> bool:
     user = db.query(User).filter(User.id == user_id).first()

@@ -32,3 +32,38 @@ def test_create_user(db):
     assert user.id is not None
     assert user.name == "Teste"
     assert user.email == "teste@teste.com"
+
+def test_update_other_user_forbidden(client):
+    user_a = {
+        "name": "Usuario A",
+        "email": "usuario@example.com",
+        "password": "senha123"
+    }
+    response = client.post("/users/", json=user_a)
+    assert response.status_code == 201
+    user_a_id = response.json()["id"]
+    
+    user_b = {
+        "name": "Usuario B",
+        "email": "usuariob@example.com",
+        "password": "senha456"        
+    }
+    response = client.post("/users/", json=user_b)
+    assert response.status_code == 201
+    user_b_id = response.json()["id"]
+    login_data = {
+        "username": user_a["email"],
+        "password": user_a["password"]
+    }
+    response = client.post("/login/", data=login_data)
+    assert response.status_code == 200
+    token_a = response.json()["access_token"]
+
+    update_data = {
+        "name": "Hackeado!"
+    }
+    headers = {"Authorization": f"Bearer {token_a}"}
+    response = client.put(f"/user/{user_b_id}", json=update_data, headers=headers)
+    
+    assert response.status_code == 403
+    assert response.json()["detail"] == "Você não tem permissão para atualizar este usuário."
