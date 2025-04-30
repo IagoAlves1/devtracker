@@ -1,11 +1,11 @@
 from sqlalchemy.orm import Session
 from models.user import User
-from schemas.user import UserCreate
+from schemas.user import UserCreate, UserUpdate, UserPatch
 from utils.security import hash_password
-from schemas.user import UserUpdate
 from core.hashing import create_hash
 from typing import Optional
 from pydantic import EmailStr
+from fastapi import HTTPException
 
 def create_user(db: Session, user: UserCreate):
     hashed_pw = create_hash(user.password)
@@ -57,3 +57,21 @@ def list_users(db: Session, skip: int = 0, limit: int = 10, name: str = None, em
 
 def get_user_by_email(db: Session, user_email: EmailStr) -> Optional[User]:
     return db.query(User).filter(User.email == user_email).first()
+
+def patch_user(db: Session, user_id: int, user_patch: UserPatch, current_user: User):
+    user = db.query(User).filter(User.id == user_id).first()
+    if not user:
+        raise HTTPException(status_code=404, detail="Usuário não encontrado")
+    if user.id != current_user.id:
+        raise HTTPException(status_code=403, detail="Acesso negado")
+    
+    if user_patch.name is not None:
+        user.name = user_patch.name
+    if user_patch.email is not None:
+        user.email = user_patch.email
+    if user_patch.password is not None:
+        user.password = create_hash(user_patch.password)
+
+    db.commit()
+    db.refresh(user)
+    return user

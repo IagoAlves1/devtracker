@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
-from services.user_service import create_user, get_user, update_user, delete_user, list_users
-from schemas.user import UserCreate, UserResponse, UserUpdate
+from services.user_service import create_user, get_user, update_user, delete_user, list_users, patch_user
+from schemas.user import UserCreate, UserResponse, UserUpdate, UserPatch
 from core.database import Sessionlocal
 from typing import List, Optional
 from models.user import User
@@ -64,7 +64,6 @@ def delete_user_endpoint(user_id: int, db: Session = Depends(get_db), current_us
     db.commit()
     return {"message": "Usuário excluído com sucesso"}
     
-
 @router.get("/users/", response_model=List[UserResponse])
 def list_users_endpoint(
     skip: int = 0,
@@ -74,3 +73,8 @@ def list_users_endpoint(
     db: Session = Depends(get_db)):
 
     return list_users(db=db, skip=skip, limit=limit, name=name, email=email)
+
+@router.patch("/users/{user_id}")
+def update_user_partially(user_id: int, user_patch: UserPatch, db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
+    updated_user = patch_user(db, user_id, user_patch, current_user)
+    return updated_user
