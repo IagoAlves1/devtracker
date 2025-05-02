@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
-from services.user_service import create_user, get_user, update_user, delete_user, list_users, patch_user
+from services.user_service import create_user, get_user, update_user, list_users, patch_user
 from schemas.user import UserCreate, UserResponse, UserUpdate, UserPatch
 from core.database import Sessionlocal
 from typing import List, Optional
