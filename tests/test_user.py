@@ -22,10 +22,13 @@ def db():
 
 def test_create_user(db):
     user_data = UserCreate(
-        name="Teste",
-        email="teste@teste.com",
-        password="123456"
+        name="Master Admin",
+        email="4464561adm@4465464adm.com",
+        password="adm648611adm54",
+        role="admin"
     )
+
+    return user_data
 
     user = create_user(db, user_data)
 

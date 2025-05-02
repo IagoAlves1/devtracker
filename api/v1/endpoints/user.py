@@ -6,6 +6,7 @@ from core.database import Sessionlocal
 from typing import List, Optional
 from models.user import User
 from core.security import get_current_user
+from core.dependencies import is_admin
 
 router = APIRouter()
 
@@ -51,7 +52,7 @@ def update_user_endpoint(user_id: int, user: UserUpdate, db: Session = Depends(g
 
 @router.delete("/user/{user_id}")
 def delete_user_endpoint(user_id: int, db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
-    
+
     if current_user.id != user_id:
         raise HTTPException(status_code=403, detail="Você não tem permissão para excluir este usuário.")
     
@@ -78,3 +79,17 @@ def list_users_endpoint(
 def update_user_partially(user_id: int, user_patch: UserPatch, db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
     updated_user = patch_user(db, user_id, user_patch, current_user)
     return updated_user
+
+@router.patch("/users/{user_id}/promote", response_model=dict)
+def promote_user_to_admin(user_id: int, db: Session = Depends(get_db), current_admin: User = Depends(is_admin)):
+    user = db.query(User).filter(User.id == user_id).first()
+
+    if not user:
+        raise HTTPException(status_code=404, detail="Usuário não encontrado")
+    
+    if user.role == "admin":
+        return {"message":  "Usuário já é admin"}
+    
+    user.role = "admin"
+    db.commit()
+    return {"message": f"Usuário '{user.name}' promovido a admin com sucesso"}
