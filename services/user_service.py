@@ -1,7 +1,6 @@
 from sqlalchemy.orm import Session
 from models.user import User
 from schemas.user import UserCreate, UserUpdate, UserPatch
-from utils.security import hash_password
 from core.hashing import create_hash
 from typing import Optional
 from pydantic import EmailStr
