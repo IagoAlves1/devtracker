@@ -8,7 +8,7 @@ from fastapi import HTTPException
 
 def create_user(db: Session, user: UserCreate):
     hashed_pw = create_hash(user.password)
-    db_user = User(name=user.name, email=user.email, password=hashed_pw, role=user.role)
+    db_user = User(name=user.name, email=user.email, password=hashed_pw, role="user")
     db.add(db_user)
     db.commit()
     db.refresh(db_user)

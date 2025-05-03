@@ -5,7 +5,9 @@ class UserCreate(BaseModel):
     name: str
     email: EmailStr
     password: str
-    role: Optional[str] = "user"
+
+    class Config:
+        extra = "forbid"
 
 class UserUpdate(BaseModel):
     name: Optional[str] = None
