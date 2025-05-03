@@ -1,8 +1,9 @@
 from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
-from models.user import Base 
+from sqlalchemy.orm import sessionmaker, Session
+from models.user import Base, User
 import os
 from core.database import create_tables
+from core.hashing import create_hash
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 DATABASE_URL = f"sqlite:///{os.path.join(BASE_DIR, 'devtracker.db')}"
@@ -16,3 +17,16 @@ def create_tables():
 if __name__ == "__main__":
     create_tables()
     print("Banco de dados inicializado com sucesso!")
+
+def create_master_admin(db: Session):
+    existing_admin = db.query(User).filter(User.email == "admin@admin.com").first()
+    if not existing_admin:
+        admin_user = User(
+            name="Admin Master",
+            email="admin@admin.com",
+            password=create_hash("admin123"),
+            role="admin"
+        )
+        db.add(admin_user)
+        db.commit()
+        print("Admin master criado com sucesso.") 

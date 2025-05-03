@@ -17,7 +17,7 @@ def get_db():
     finally:
         db.close()
 
-@router.post("/login")
+@router.post("/login", summary="Login")
 def login(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)):
     
     usuario = get_user_by_email(db, form_data.username)
@@ -33,6 +33,6 @@ def login(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depend
 
     return {"access_token": token, "token_type": "bearer"}
 
-@router.get("/protected-route")
+@router.get("/protected-route", summary="Validar se usuário está logado")
 def protected_route(current_user: User = Depends(get_current_user)):
     return {"message": f"Bem-vindo, {current_user.name}!"}
