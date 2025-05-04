@@ -8,6 +8,7 @@ RUN pip install --upgrade pip
 RUN pip install -r requirements.txt
 RUN pip install pydantic[email]
 RUN pip install python-multipart
+RUN pip install httpx
 
 EXPOSE 8000
 
