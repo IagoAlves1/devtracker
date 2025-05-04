@@ -29,7 +29,7 @@ jobs:
       - name: Copiar variáveis de ambiente de exemplo
         run: cp .env.example .env
 
-      - name: Login no Docker Hub
+      - name: Login no Docker Hub.
         run: |
           echo ${{ secrets.DOCKER_USERNAME }} | docker login --username ${{ secrets.DOCKER_USERNAME }} --password-stdin
 
