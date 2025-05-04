@@ -10,12 +10,6 @@ jobs:
   test:
     runs-on: ubuntu-latest
 
-    services:
-      db:
-        image: sqlite
-        ports:
-          - 5432:5432
-
     steps:
       - name: Checkout código
         uses: actions/checkout@v4
