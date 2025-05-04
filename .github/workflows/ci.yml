@@ -1,0 +1,43 @@
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    services:
+      db:
+        image: sqlite
+        ports:
+          - 5432:5432
+
+    steps:
+      - name: Checkout código
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12.9'
+
+      - name: Instalar dependências
+        run: |
+          pip install -r requirements.txt
+          pip install pytest
+          pip install pydantic[email]
+          pip install python-multipart
+
+
+      - name: Copiar variáveis de ambiente de exemplo
+        run: cp .env.example .env
+
+      - name: Build da imagem Docker
+        run: docker build -t fastapi-app .
+
+      - name: Rodar testes com Pytest
+        run: docker run --rm fastapi-app pytest

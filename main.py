@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from api.v1.endpoints import user, auth
 from init_db import create_master_admin
-from core.database import Sessionlocal
+from core.database import SessionLocal
 
 app = FastAPI()
 
@@ -14,6 +14,6 @@ app.include_router(auth.router, prefix="/api/v1/endpoints/auth")
 
 @app.on_event("startup")
 def startup_event():
-    db = Sessionlocal()
+    db = SessionLocal()
     create_master_admin(db)
     db.close()

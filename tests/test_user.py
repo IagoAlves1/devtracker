@@ -25,7 +25,6 @@ def test_create_user(db):
         name="Master Admin",
         email="4464561adm@4465464adm.com",
         password="adm648611adm54",
-        role="admin"
     )
 
     return user_data

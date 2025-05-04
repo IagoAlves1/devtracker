@@ -2,5 +2,7 @@ __pycache__/
 *.pyc
 *.pyo
 *.pyd
+*.sqlite3
+*.log
 .env
-*.db
+.db

@@ -1,7 +1,7 @@
 from fastapi import APIRouter, HTTPException, Depends
 from sqlalchemy.orm import Session
 from fastapi.security import OAuth2PasswordRequestForm
-from core.database import Sessionlocal
+from core.database import SessionLocal
 from services.user_service import get_user_by_email
 from core.security import create_token_access, get_current_user
 from core.hashing import verify_password
@@ -11,7 +11,7 @@ from models.user import User
 router = APIRouter()
 
 def get_db():
-    db = Sessionlocal()
+    db = SessionLocal()
     try:
         yield db
     finally:
