@@ -1,7 +1,7 @@
 from datetime import datetime, timedelta
 from jose import jwt
 from core.config import SECRET_KEY, ALGORITHM, ACCESS_TOKEN_EXPIRE_MINUTES
-from core.database import Sessionlocal
+from core.database import SessionLocal
 from fastapi import HTTPException, Depends
 from fastapi.security import OAuth2PasswordBearer
 from jose import JWTError, jwt
@@ -11,7 +11,7 @@ from sqlalchemy.orm import Session
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/v1/endpoints/auth/login")
 
 def get_db():
-    db = Sessionlocal()
+    db = SessionLocal()
     try:
         yield db
     finally:

@@ -1,8 +1,8 @@
-from core.database import Sessionlocal
+from core.database import SessionLocal
 from services.user_service import create_user
 from schemas.user import UserCreate
 
-db = Sessionlocal()
+db = SessionLocal()
 
 user_data = UserCreate(
     name="",

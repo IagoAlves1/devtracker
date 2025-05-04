@@ -1,8 +1,8 @@
-from core.database import Sessionlocal
+from core.database import SessionLocal
 from services.user_service import update_user
 from schemas.user import UserUpdate
 
-db = Sessionlocal()
+db = SessionLocal()
 
 user_id = 1
 user_data = UserUpdate(

@@ -1,7 +1,7 @@
-from core.database import Sessionlocal
+from core.database import SessionLocal
 
 try:
-    db = Sessionlocal()
+    db = SessionLocal()
     print("Conexão com o banco de dados funcionando!")
 finally:
     db.close()
