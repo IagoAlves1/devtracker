@@ -26,14 +26,14 @@ jobs:
           pip install pydantic[email]
           pip install python-multipart
 
-      - name: Copiar variáveis de ambiente de exemplo
-        run: cp .env.example .env
-
       - name: Login no Docker Hub.
         run: echo ${{ secrets.DOCKER_PASSWORD }} | docker login --username ${{ secrets.DOCKER_USERNAME }} --password-stdin
 
       - name: Build da imagem Docker
         run: docker build -t devtracker-fastapi .
 
+      - name: Copiar variáveis de ambiente de exemplo
+        run: cp .env.example .env
+
       - name: Rodar testes com Pytest
-        run: docker run --rm devtracker-fastapi pytest
+        run: docker run --rm --env-file .env devtracker-fastapi pytest
