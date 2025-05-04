@@ -103,3 +103,10 @@ def promote_user_to_admin(user_id: int, db: Session = Depends(get_db), current_u
     user.role = "admin"
     db.commit()
     return {"message": f"Usuário '{user.name}' promovido a admin com sucesso"}
+
+@router.get("/users/{user_id}", response_model=UserResponse, summary="Meus dados")
+def get_data_current_user(current_user: User = Depends(get_current_user)):
+    
+    if current_user is not None:
+        return current_user
+    raise HTTPException(status_code=404, detail="Usuário não encontrado")
