@@ -95,8 +95,6 @@ pytest
 - 🔧 Paginação com filtros e ordenação
 - 🔒 Autorização mais avançada (perfis e papéis)
 - 📄 Swagger + exemplos de requisição
-- 📂 Modularização de pastas
-- 🐳 CI com Docker + Testes automatizados
 - ✨ Interface Web para interagir com a API (front-end ainda não implementado)
 
 ---
