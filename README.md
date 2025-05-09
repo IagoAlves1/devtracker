@@ -43,7 +43,7 @@ Projeto de portfólio com foco em desenvolvimento back-end utilizando **FastAPI*
 ### Clonando o projeto
 
 ```bash
-git clone https://github.com/seu-usuario/fastapi-crud-usuarios.git
+git clone https://github.com/IagoAlves1/fastapi-crud-usuarios.git
 cd fastapi-crud-usuarios
 ```
 
