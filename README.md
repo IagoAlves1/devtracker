@@ -104,7 +104,7 @@ pytest
 
 ## 👨‍💻 Autor
 
-**Seu Nome** — [@seu-github](https://github.com/seu-github)
+**Iago Alves** — [@IagoAlves1](https://github.com/IagoAlves1)
 
 ---
 
