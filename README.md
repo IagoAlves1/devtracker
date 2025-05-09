@@ -74,19 +74,27 @@ pytest
 
 ```
 .
-├── app/
-│   ├── main.py
-│   ├── models/
-│   ├── schemas/
-│   ├── services/
-│   ├── routes/
-│   ├── core/
-├── tests/
-├── .env.example
-├── Dockerfile
-├── requirements.txt
-├── README.md
-└── app.log
+├── .db                           # Arquivos de banco de dados, como o `app.db` (geralmente o banco SQLite)
+├── .github                       # Diretório com arquivos de configuração do GitHub Actions (CI/CD)
+│   └── workflows                 # Fluxos de trabalho (workflow) do GitHub Actions
+├── api                            # Diretório para a API
+│   └── v1                         # Versão da API (v1 no caso)
+│       └── endpoints              # Endpoints da API
+│           └── __pycache__        # Arquivos compilados do Python
+├── app.db                         # Arquivo de banco de dados (provavelmente SQLite)
+├── core                           # Módulo principal do aplicativo
+│   └── __pycache__                # Arquivos compilados do Python
+├── models                         # Definições de modelos (como a definição de usuários)
+│   └── __pycache__                # Arquivos compilados do Python
+├── schemas                        # Definições de esquemas para validação (Pydantic)
+│   └── __pycache__                # Arquivos compilados do Python
+├── scripts                        # Scripts auxiliares (geralmente para migrações ou utilitários)
+├── services                       # Lógica de serviços (como a criação de usuários, autenticação etc.)
+│   └── __pycache__                # Arquivos compilados do Python
+├── tests                          # Testes automatizados
+├── utils                          # Funções e utilitários auxiliares
+│   └── __pycache__                # Arquivos compilados do Python
+└── __pycache__     
 ```
 
 ---
@@ -98,7 +106,7 @@ pytest
 - 📄 Swagger + exemplos de requisição
 - 📂 Modularização de pastas
 - 🐳 CI com Docker + Testes automatizados
-- ✨ Interface Web para interagir com a API (frontend opcional)
+- ✨ Interface Web para interagir com a API (front-end ainda não implementado)
 
 ---
 
