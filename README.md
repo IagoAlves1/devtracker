@@ -2,7 +2,7 @@
 
 Projeto de portfólio com foco em desenvolvimento back-end utilizando **FastAPI**. Esta API realiza operações CRUD (Create, Read, Update, Delete) de usuários, com autenticação via **JWT**, logs de atividades e boas práticas de organização e segurança.
 
-> ⚠️ Projeto em desenvolvimento — novas funcionalidades serão incluídas em breve (como logs de login, paginação avançada, documentação Swagger aprimorada, entre outras melhorias).
+> ⚠️ Projeto em desenvolvimento — novas funcionalidades serão incluídas em breve (paginação avançada, documentação Swagger aprimorada, testes mais robustos, entre outras melhorias).
 
 ---
 
