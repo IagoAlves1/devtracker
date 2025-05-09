@@ -33,7 +33,7 @@ jobs:
         run: docker build -t devtracker-fastapi .
 
       - name: Copiar variáveis de ambiente de exemplo
-        run: cp .env.example .env
+        run: cp config.env.example .env
 
       - name: Rodar testes com Pytest
         run: docker run --rm --env-file .env devtracker-fastapi pytest
