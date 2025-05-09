@@ -76,22 +76,16 @@ pytest
 ├── .github                       # Diretório com arquivos de configuração do GitHub Actions (CI/CD)
 │   └── workflows                 # Fluxos de trabalho (workflow) do GitHub Actions
 ├── api                            # Diretório para a API
-│   └── v1                         # Versão da API (v1 no caso)
+│   └── v1                         # Versão da API
 │       └── endpoints              # Endpoints da API
 │           └── __pycache__        # Arquivos compilados do Python
 ├── core                           # Módulo principal do aplicativo
-│   └── __pycache__                # Arquivos compilados do Python
-├── models                         # Definições de modelos (como a definição de usuários)
-│   └── __pycache__                # Arquivos compilados do Python
+├── models                         # Definições de modelos (definição de usuários)
 ├── schemas                        # Definições de esquemas para validação (Pydantic)
-│   └── __pycache__                # Arquivos compilados do Python
 ├── scripts                        # Scripts auxiliares (geralmente para migrações ou utilitários)
 ├── services                       # Lógica de serviços (como a criação de usuários, autenticação etc.)
-│   └── __pycache__                # Arquivos compilados do Python
 ├── tests                          # Testes automatizados
 ├── utils                          # Funções e utilitários auxiliares
-│   └── __pycache__                # Arquivos compilados do Python
-└── __pycache__     
 ```
 
 ---
