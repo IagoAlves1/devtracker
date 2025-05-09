@@ -5,6 +5,7 @@ from core.hashing import create_hash
 from typing import Optional
 from pydantic import EmailStr
 from fastapi import HTTPException
+from utils.logger import logger
 
 def create_user(db: Session, user: UserCreate):
     hashed_pw = create_hash(user.password)
@@ -59,10 +60,6 @@ def get_user_by_email(db: Session, user_email: EmailStr) -> Optional[User]:
 
 def patch_user(db: Session, user_id: int, user_patch: UserPatch, current_user: User):
     user = db.query(User).filter(User.id == user_id).first()
-    if not user:
-        raise HTTPException(status_code=404, detail="Usuário não encontrado")
-    if user.id != current_user.id:
-        raise HTTPException(status_code=403, detail="Acesso negado")
     
     if user_patch.name is not None:
         user.name = user_patch.name
