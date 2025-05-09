@@ -73,15 +73,12 @@ pytest
 ## 📁 Estrutura do Projeto (resumida)
 
 ```
-.
-├── .db                           # Arquivos de banco de dados, como o `app.db` (geralmente o banco SQLite)
 ├── .github                       # Diretório com arquivos de configuração do GitHub Actions (CI/CD)
 │   └── workflows                 # Fluxos de trabalho (workflow) do GitHub Actions
 ├── api                            # Diretório para a API
 │   └── v1                         # Versão da API (v1 no caso)
 │       └── endpoints              # Endpoints da API
 │           └── __pycache__        # Arquivos compilados do Python
-├── app.db                         # Arquivo de banco de dados (provavelmente SQLite)
 ├── core                           # Módulo principal do aplicativo
 │   └── __pycache__                # Arquivos compilados do Python
 ├── models                         # Definições de modelos (como a definição de usuários)
