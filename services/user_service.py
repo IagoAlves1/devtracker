@@ -71,3 +71,57 @@ def patch_user(db: Session, user_id: int, user_patch: UserPatch, current_user: U
     db.commit()
     db.refresh(user)
     return user
+
+def activate_user(user_id: int, current_user: User, db: Session):
+
+    user = db.query(User).filter(User.id == user_id).first()
+    
+    if not user:
+        logger.error("Usuário não encontrado durante a desativação de usuário")
+        raise HTTPException(status_code=404, detail="Usuário não encontrado")
+    
+    if current_user.role == "admin" or current_user.id == user.id:
+            
+        if user.is_active == True:
+            logger.error(f"Usuário - ID:{user.id} já está ativo")
+            return{"message": f"Usuário - ID: {user.id} já está ativo"}
+        
+        user.is_active = True
+        db.commit()
+        logger.info(f"Usuário - ID: {user.id} foi reativado")
+        return {"message" : f"Usuário - ID: {user.id} foi reativado com sucesso!"}
+
+    if current_user.id != user_id:
+        logger.error(f"Usuário - ID: {current_user.id}, teve acesso negado para recurso de ativação")
+        raise HTTPException(status_code=403, detail="Acesso negado")
+
+
+def deactivate_user(user_id: int, current_user: User, db: Session):
+
+    user = db.query(User).filter(User.id == user_id).first()
+
+    if current_user is None:
+        logger.error("Acesso negado a desativação de usuário")
+        raise HTTPException(status_code=403, detail="Acesso negado")
+    
+    if not user:
+        logger.error("Usuário não encontrado durante a desativação de usuário")
+        raise HTTPException(status_code=404, detail="Usuário não encontrado")
+    
+    if user.is_active == False:
+        logger.error(f"Usuário - ID:{user.id} já está desativado")
+        return {"message": f"Usuário {user_id} já foi desativado"}
+
+    if current_user.role == "admin" or current_user.id == user.id:
+
+        user.is_active = False
+        db.commit()
+        logger.info(f"Usuário com ID {user.id} desativado com sucesso.")
+        return {"message": f"Usuário - ID: {user.id} usuário foi desativado"}
+    
+    if current_user.id != user_id:
+            logger.error(f"Usuário - ID: {current_user.id} tentou excluir usuário - ID: {user_id}")
+            raise HTTPException(status_code=403, detail="Você não tem permissão para desativar um usuário diferente do seu")
+   
+    
+

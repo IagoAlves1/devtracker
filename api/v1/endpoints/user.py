@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
-from services.user_service import create_user, get_user, update_user, list_users, patch_user
+from services.user_service import create_user, get_user, update_user, list_users, patch_user, deactivate_user, activate_user
 from schemas.user import UserCreate, UserResponse, UserUpdate, UserPatch
 from core.database import SessionLocal
 from typing import List, Optional
@@ -26,7 +26,7 @@ def create_user_endpoint(user: UserCreate, db: Session = Depends(get_db)):
     elif user.password == "":
         logger.error(f"Erro ao criar usuário: {user.name}")
         raise HTTPException(status_code=400, detail="Senha senha não pode ser vazia, digite a senha criada no campo Senha e tente novamente!")
-    logger.info(f"Usuário criado com sucesso - ID: {create_user.id}, E-mail: {create_user.email}")
+    logger.info(f"Usuário criado com sucesso - Nome: {user.name}, E-mail: {user.email}")
     return create_user(db=db, user=user)
 
 
@@ -138,3 +138,11 @@ def get_data_current_user(current_user: User = Depends(get_current_user)):
         return current_user
     logger.error("Usuário não encontrado durante consulta de dados do usuário logado")
     raise HTTPException(status_code=404, detail="Usuário não encontrado")
+
+@router.patch("/users/{user_id}/deactivate", summary="Desativar usuário")
+def deactivate_user_route(user_id: int, current_user: User = Depends(get_current_user), db: Session = Depends(get_db)):
+    return deactivate_user(user_id, current_user, db)
+
+@router.patch("/users/{user_id}/activate", summary="Ativar usuário")
+def activate_user_route(user_id: int, current_user: User = Depends(get_current_user), db: Session = Depends(get_db)):
+    return activate_user(user_id, current_user, db)

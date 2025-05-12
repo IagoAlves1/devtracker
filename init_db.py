@@ -25,7 +25,9 @@ def create_master_admin(db: Session):
             name="Admin Master",
             email="admin@admin.com",
             password=create_hash("admin123"),
-            role="admin"
+            role="admin",
+            is_active = True,
+            is_deleted = False
         )
         db.add(admin_user)
         db.commit()
