@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
-from services.user_service import create_user, get_user, update_user, list_users, patch_user, deactivate_user, activate_user
+from services.user_service import create_user, get_user, update_user, list_users, patch_user, deactivate_user, activate_user, promote_user_to_admin, delete_user
 from schemas.user import UserCreate, UserResponse, UserUpdate, UserPatch
 from core.database import SessionLocal
 from typing import List, Optional
@@ -40,51 +40,13 @@ def get_user_endpoint(user_id: int, db: Session =  Depends(get_db)):
     return db_user
 
 @router.put("/user/{user_id}", summary="Atualizar todas as informações de um usuário")
-def update_user_endpoint(user_id: int, user: UserUpdate, db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
-    
-    db_user = db.query(User).filter(User.id == user_id).first()    
-    if db_user is None:
-        logger.error("Erro ao localizar usuário id: {user_id}")
-        raise HTTPException(status_code=404, detail="Usuário não encontrado")
-
-    if current_user.id != user_id:
-        logger.error(f"Permissão negada: Usuário {current_user.id} tentou atualizar o usuário {user_id}")
-        raise HTTPException(status_code=403, detail="Você não tem permissão para atualizar este usuário.")
-
-    if user.password:
-        from core.hashing import create_hash
-        user.password = create_hash(user.password)
-
-    updated_user = update_user(db=db, user_id=user_id, user_data=user)
-    logger.info(f"Usuário atualizado com sucesso - ID: {user_id}")
-    return {"message": "Usuário atualizado com sucesso"}
+def update_user_endpoint(user_id: int, user: UserUpdate, db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):  
+    return update_user(db=db, user_id=user_id, user_data=user)
 
 @router.delete("/user/{user_id}", summary="Deletar usuário")
 def delete_user_endpoint(user_id: int, db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
+    return delete_user(user_id, db, current_user)
 
-    if current_user.role == "admin" and current_user.id == user_id:
-        logger.error("Operação negada: administrador tentou excluir a si mesmo")
-        raise HTTPException(status_code=403, detail="Admins não podem excluir a si mesmos.")
-
-    if current_user.role != "admin" and current_user.id != user_id:
-        logger.error(f"Usuário {current_user.id} tentou excluir outro usuário sem permissão")
-        raise HTTPException(status_code=403, detail="Você não tem permissão para excluir este usuário.")
-    
-    if current_user.role == "admin" and user.role == "admin" and current_user.id != user_id:
-        logger.error("Operação negada: um administrador tentou excluir outro administrador")
-        raise HTTPException(status_code=403, detail="Você não pode excluir outro administrador.")
-    
-    user = db.query(User).filter(User.id == user_id).first()
-   
-    if not user:
-        logger.error(f"Usuário não encontrado para exclusão - ID: {user.id}")
-        raise HTTPException(status_code=404, detail="Usuário não encontrado.")
-    
-    logger.info(f"Usuário deletado com sucesso - ID: {user_id}")
-    db.delete(user)
-    db.commit()
-    return {"message": "Usuário excluído com sucesso"}
-    
 @router.get("/users/", response_model=List[UserResponse], summary="Listar usuários")
 def list_users_endpoint(
     skip: int = 0,
@@ -109,26 +71,12 @@ def update_user_partially(user_id: int, user_patch: UserPatch, db: Session = Dep
     return updated_user
 
 @router.patch("/users/{user_id}", summary="Promover usuário a admin")
-def promote_user_to_admin(user_id: int, db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
-    
-    if current_user.role != "admin":
-        logger.error(f"Usuário {current_user.id} tentou se promover para administrador (operação negada)")
-        raise HTTPException(status_code=403, detail="Apenas admins podem promover outros usuários a admin")
-    
-    user = db.query(User).filter(User.id == user_id).first()
-
-    if not user:
-        logger.error("Usuário não encontrado na tentativa de promoção para administrador")
-        raise HTTPException(status_code=404, detail="Usuário não encontrado")
-    
-    if user.role == "admin":
-        logger.error("Tentativa inválida: usuário já é administrador")
-        return {"message":  "Usuário já é admin"}
-    
-    user.role = "admin"
-    db.commit()
-    logger.info(f"Usuário promovido a administrador - ID: {user_id}")
-    return {"message": f"Usuário '{user.name}' promovido a admin com sucesso"}
+def promote_user_to_admin_endpoint(
+    user_id: int,
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    return promote_user_to_admin(user_id, current_user, db)
 
 @router.get("/users/{user_id}", response_model=UserResponse, summary="Meus dados")
 def get_data_current_user(current_user: User = Depends(get_current_user)):
