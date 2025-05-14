@@ -31,17 +31,12 @@ def create_user_endpoint(user: UserCreate, db: Session = Depends(get_db)):
 
 
 @router.get("/user/{user_id}", response_model=UserResponse, summary="Busca de usuário por ID")
-def get_user_endpoint(user_id: int, db: Session =  Depends(get_db)):
-    db_user = get_user(db=db, user_id=user_id)
-    if db_user is None:
-        logger.error(f"Erro ao localizar usuário - ID: {user_id.id}")
-        raise HTTPException(status_code=404, detail="Usuário não encontrado")
-    logger.info(f"Usuário localizado com sucesso - ID: {user_id}")
-    return db_user
+def get_user_endpoint(user_id: int, db: Session =  Depends(get_db), current_user: User = Depends(get_current_user)):
+    return get_user(user_id=user_id, db=db, current_user=current_user)
 
 @router.put("/user/{user_id}", summary="Atualizar todas as informações de um usuário")
 def update_user_endpoint(user_id: int, user: UserUpdate, db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):  
-    return update_user(db=db, user_id=user_id, user_data=user)
+    return update_user(db=db, user_id=user_id, user_data=user, current_user=current_user)
 
 @router.delete("/user/{user_id}", summary="Deletar usuário")
 def delete_user_endpoint(user_id: int, db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
