@@ -104,8 +104,12 @@ def delete_user(user_id: int, db: Session, current_user: User):
         logger.error(f"Erro ao buscar usuário {e}")
         raise HTTPException(status_code=500, detail="Erro interno no servidor")
 
-def list_users(db: Session, skip: int = 0, limit: int = 10, name: str = None, email: str = None):
+def list_users(db: Session, current_user: User, skip: int = 0, limit: int = 10, name: str = None, email: str = None):
     try:
+        if current_user.role != "admin":
+            logger.error("Operação negada: um usuário tentou acessar dados de outro usuário")
+            raise HTTPException(status_code=403, detail="Você não tem permissão para esse recurso")
+        
         query = db.query(User)
 
         if name:
@@ -228,3 +232,10 @@ def promote_user_to_admin(user_id: int, current_user: User, db: Session):
     except SQLAlchemyError as e:
         logger.error(f"Erro ao buscar usuário {e}")
         raise HTTPException(status_code=500, detail="Erro interno no servidor")
+
+def get_data_current_user(current_user: User):
+    if current_user is not None:
+        logger.info("Consulta de dados do usuário logado realizada com sucesso")
+        return current_user
+    logger.error("Usuário não encontrado durante consulta de dados do usuário logado")
+    raise HTTPException(status_code=404, detail="Usuário não encontrado")
